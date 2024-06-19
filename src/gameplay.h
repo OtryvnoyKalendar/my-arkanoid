@@ -27,3 +27,4 @@ void rocketInit();
 void GameLogic();
 void initBall();
 void backToRocket();
+void GoToNextLevel();

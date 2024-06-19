@@ -6,6 +6,7 @@
 #include "map.h"
 #include "main.h"
 #include "tui.h"
+#include "core.h"
 
 int hitCnt = 0;
 int hitCntNeed = 10;
@@ -25,15 +26,22 @@ void rocketPut() {
 		map[rocket.y][rocket.x+i] = SYMBOL_ROCKET;
 }
 
+void GoToNextLevel() {
+	level++;
+	run = 0;
+	ShowLevelPreview();
+	lvlMapInit();
+}
+
+void CheckWin() {	
+	if(lvlMapBrickCount() == 0) // hitCnt >= hitCntNeed
+		GoToNextLevel();
+}
+
 void backToRocket() {
-	if (hitCnt > hitCntMax)
+	if(hitCnt > hitCntMax)
 		hitCntMax = hitCnt;
-	if (hitCnt >= hitCntNeed) {
-		level++;
-		ShowLevelPreview();
-	}
 	hitCnt = 0;
-	
 	run = 0;
 	ball.alfa = (( (rand() % 20) / 19.0 ) - 2.0)*1.25;
 }
@@ -66,8 +74,24 @@ void autoMoveBall() {
 	moveBall(ball.x + cos(ball.alfa) * ball.speed
 			,ball.y + sin(ball.alfa) * ball.speed);
 	
-	if(map[ball.iy][ball.ix] == SYMBOL_WALL || map[ball.iy][ball.ix] == SYMBOL_ROCKET) {
-		if(ball.ix != ballPrevious.ix && ball.iy != ballPrevious.iy) {
+	if(
+	map[ball.iy][ball.ix] == SYMBOL_WALL
+	|| map[ball.iy][ball.ix] == SYMBOL_ROCKET
+	|| map[ball.iy][ball.ix] == SYMBOL_BRICK
+	) {
+		if (map[ball.iy][ball.ix] == SYMBOL_ROCKET) {
+			hitCnt++;
+			float pos = ball.x - rocket.x;
+			float psi = pos / rocket.size * 2 - 1;
+			psi *= M_PI_2 * 0.9f;
+			if( !(psi < M_PI_2 && psi > -M_PI_2) ) {
+				run = 0;
+				return;
+				//ErrorCloseProgram("неправильный расчёт угла");
+			}
+			ballPrevious.alfa = -M_PI_2 + psi;
+		}
+		else if(ball.ix != ballPrevious.ix && ball.iy != ballPrevious.iy) {
 			if (map[ballPrevious.iy][ball.ix] == map[ball.iy][ballPrevious.ix])
 				ballPrevious.alfa += M_PI;
 			else {
@@ -82,15 +106,24 @@ void autoMoveBall() {
 		else
 			ballPrevious.alfa = (2*M_PI - ballPrevious.alfa);
 		
-		if (map[ball.iy][ball.ix] == SYMBOL_ROCKET) {
-			hitCnt++;
+		if (map[ball.iy][ball.ix] == SYMBOL_BRICK) {
+			//lvlMap[ball.iy][ball.ix] = SYMBOL_NOTHING;
+			int brickNum = (ball.ix-1) / BrickWidth;
+			int dx = 1 + brickNum * BrickWidth;
+			for(int i = 0; i < BrickWidth; i++) {
+				static char* c;
+				c = &lvlMap[ball.iy][i + dx];
+				if(*c == SYMBOL_BRICK)
+					*c = SYMBOL_NOTHING;
+			}
 		}
+		
 		//printf("\a");
 		ballPrevious.alfa += rand() % 20 / 19.0 / 3.0;
 		ball = ballPrevious;
 		autoMoveBall();
 	}
-	else if (map[ball.iy][ball.ix] == '=') {
+	else if (map[ball.iy][ball.ix] == SYMBOL_GRID) {
 		backToRocket();
 	}
 }
@@ -103,4 +136,6 @@ void GameLogic() {
 		moveBall(rocket.x + rocket.size/2, rocket.y-1);
 	else
 		autoMoveBall();
+	
+	CheckWin();
 }

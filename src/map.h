@@ -12,6 +12,7 @@ extern char lvlMap[height][width];
 
 int IsMapCellExists(int mapY, int mapX);
 int IsConsoleCellExists(int mapY, int mapX);
+int lvlMapBrickCount();
 //void mapInit();
 void lvlMapInit();
 void lvlMapPut();

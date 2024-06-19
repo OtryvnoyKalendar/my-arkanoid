@@ -20,7 +20,7 @@ tBall ball;
 
 void OpenConsoleMode() {
 	setConsoleSize(ConsoleWidth, ConsoleHeight);
-	setConsoleTitle("My Arkanoid! v.0.5");
+	setConsoleTitle("My Arkanoid! v.0.6");
 	OpenNcursesMode();
 }
 
@@ -56,9 +56,7 @@ void GameControl() {
 				backToRocket();
 			break;
 		case 'r':
-			level++;
-			run = 0;
-			lvlMapInit();
+			GoToNextLevel();
 			break;
 	}
 	

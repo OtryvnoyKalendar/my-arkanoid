@@ -55,13 +55,13 @@ void ShowGameInfo() {
 	int xstart = 80;
 	char buf[bufSize];
 	
-	snprintf(buf, bufSize, "LEVEL %d", level);
+	snprintf(buf, bufSize, "LEVEL     %d", level);
 	PutText(buf, 5, xstart, COLOR_YELLOW);
 	
-	snprintf(buf, bufSize, "HIT %d / %d", hitCnt, hitCntNeed);
+	snprintf(buf, bufSize, "HIT   \t%4d", hitCnt);
 	PutText(buf, 6, xstart, COLOR_YELLOW);
 	
-	snprintf(buf, bufSize, "RECORD %d", hitCntMax);
+	snprintf(buf, bufSize, "RECORD %4d", hitCntMax);
 	PutText(buf, 7, xstart, COLOR_YELLOW);
 	
 	snprintf(buf, bufSize, "rocket.x = %3d", rocket.x);
