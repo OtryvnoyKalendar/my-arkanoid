@@ -1,6 +1,4 @@
 
-#define GAME_DELAY_CONSTANT 50
-
 #define SYMBOL_NOTHING 	' '
 #define SYMBOL_WALL 	'#'
 #define SYMBOL_ROCKET 	'@'

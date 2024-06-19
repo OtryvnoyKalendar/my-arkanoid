@@ -2,8 +2,8 @@
 #define width 65
 #define height 25
 
-#define ConsoleWidth 120
-#define ConsoleHeight 40
+#define ConsoleWidth 100
+#define ConsoleHeight 35
 
 extern char map[height][width+1];
 

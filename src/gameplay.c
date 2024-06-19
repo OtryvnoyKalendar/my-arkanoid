@@ -8,7 +8,7 @@
 #include "tui.h"
 
 int hitCnt = 0;
-int hitCntNeed = 3;
+int hitCntNeed = 10;
 int hitCntMax = 0;
 
 void rocketInit() {
