@@ -1,6 +1,6 @@
 # my-arkanoid
 
-![screenshot](https://github.com/OtryvnoyKalendar/termraria/blob/main/screenshots/screenshot%202.png)
+![screenshot](https://github.com/OtryvnoyKalendar/my-arkanoid/blob/main/screenshots/screenshot%201.png)
 
 ### Общее описание
 my-arkanoid - это консольная игра по мотивам Арканоид, которая работает в Linux. Это только прототип игры, которую я написал для практики языка C.
