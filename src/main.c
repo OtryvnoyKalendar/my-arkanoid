@@ -103,7 +103,7 @@ int main() {
 	
 	while(1) {
 		ClearMap();
-		lvlMapPut(); //mapInit();
+		lvlMapPut();
 		
 		GameLogic();
 		

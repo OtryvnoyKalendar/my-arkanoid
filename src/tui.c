@@ -24,6 +24,10 @@ void ShowMap() {
 					color = COLOR_GRID; break;
 				case SYMBOL_BRICK:
 					color = COLOR_BRICK; break;
+				case SYMBOL_WIDE:
+					color = COLOR_WIDE; break;
+				case SYMBOL_THIN:
+					color = COLOR_THIN; break;
 			}
 			
 			PutSymbolToConsole(i, j, symbol, color);

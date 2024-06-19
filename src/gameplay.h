@@ -14,7 +14,9 @@ typedef struct {
 	int ix, iy;
 	float alfa;
 	float speed;
-} tBall;
+	char type;
+	int del;
+} tBall, tObj;
 
 extern tRocket rocket;
 extern tBall ball;
@@ -28,3 +30,8 @@ void GameLogic();
 void initBall();
 void backToRocket();
 void GoToNextLevel();
+
+tObj ObjCreate(float x, float y, float alfa, float speed, char type);
+void ObjWork(tObj* obj);
+void ObjPut(tObj obj);
+void ObjArr_Add(tObj obj);
