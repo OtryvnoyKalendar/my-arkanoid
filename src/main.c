@@ -58,6 +58,7 @@ void GameControl() {
 		case 'r':
 			level++;
 			run = 0;
+			lvlMapInit();
 			break;
 	}
 	
@@ -95,6 +96,7 @@ void InitWorld() {
 	rocketInit();
 	initBall();
 	level = 1;
+	lvlMapInit();
 }
 
 int main() {
@@ -103,7 +105,7 @@ int main() {
 	
 	while(1) {
 		ClearMap();
-		mapInit();
+		lvlMapPut(); //mapInit();
 		
 		GameLogic();
 		

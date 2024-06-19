@@ -22,6 +22,8 @@ void ShowMap() {
 					color = COLOR_BALL; break;
 				case SYMBOL_GRID:
 					color = COLOR_GRID; break;
+				case SYMBOL_BRICK:
+					color = COLOR_BRICK; break;
 			}
 			
 			PutSymbolToConsole(i, j, symbol, color);
@@ -61,4 +63,7 @@ void ShowGameInfo() {
 	
 	snprintf(buf, bufSize, "RECORD %d", hitCntMax);
 	PutText(buf, 7, xstart, COLOR_YELLOW);
+	
+	snprintf(buf, bufSize, "rocket.x = %3d", rocket.x);
+	PutText(buf, 9, xstart, COLOR_YELLOW);
 }
