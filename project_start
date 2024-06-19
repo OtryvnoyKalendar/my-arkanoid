@@ -1,0 +1,83 @@
+#!/bin/bash
+# версия скрипта: 1.10
+
+clear
+
+debug_mode=""
+run_mode=""
+
+if [ $# -ge 1 ]; then
+	if [ "$1" = "gdb" ]; then
+		debug_mode="-ggdb3"
+	elif [ "$1" = "sgdb" ]; then
+		debug_mode="-g3"
+	elif [ "$1" = "conly" ]; then
+		run_mode="compile_only"
+	else
+		echo "Некорректный аргумент компиляции"
+	fi
+fi
+
+file_exists=false
+# Проверяем наличие файла в текущей директории
+if [ -f "mycprog" ]; then
+	rm mycprog
+	file_exists=true
+fi
+
+cppcheck --enable=all --suppress=missingIncludeSystem ./src/*.c
+echo "---"
+gcc ./src/*.c -o mycprog -Wall -lm -lncurses $debug_mode
+
+if [ "$run_mode" != "compile_only" ]; then
+	# Повторно проверяем наличие файла
+	if [ -f "mycprog" ]; then
+		# Обработчик сигнала INT при завершении через Ctrl+C
+		trap 'echo "\nПрограмма была закрыта вручную, скрипт продолжил выполняться"' INT
+		
+		echo "Вот и начинается программа:"
+		echo "---"
+		
+		if [ "$debug_mode" = "-ggdb3" ]; then
+			echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope # разрешение на присоединение к процессам
+			gnome-terminal -- sh -c 'sleep 1;
+			pid=$(pgrep mycprog);
+			echo "PID: $pid";
+			gdb -silent ./mycprog -pid $pid;' #zsh'
+			./mycprog
+			return_value=$?
+			echo 1 | sudo tee /proc/sys/kernel/yama/ptrace_scope # запрет на присоединение к процессам
+		elif [ "$debug_mode" = "-g3" ]; then
+			gdb ./mycprog
+			return_value="неизвестно"
+		else
+			./mycprog
+			return_value=$?
+		fi
+		
+		echo "---"
+		echo "Программа возвращает :" $return_value
+		
+		rm mycprog
+		
+		if [ "$file_exists" = true ]; then
+			echo "Исполняемый файл был удалён дважды"
+		else
+			echo "Исполняемый файл был удалён после завершения работы программы"
+		fi
+	else
+		if [ "$file_exists" = true ]; then
+			echo "Исполняемый файл был удалён только перед началом работы программы"
+		else
+			echo "Исполняемых файлов найдено не было"
+		fi
+	fi
+else
+	# Повторно проверяем наличие файла
+	if [ -f "mycprog" ]; then
+		echo "Программа только скомпилировалась, исполняемый файл: 'mycprog'"
+	else
+		echo "Исполняемый файл не найден, ошибка компиляции"
+	fi
+fi
+
