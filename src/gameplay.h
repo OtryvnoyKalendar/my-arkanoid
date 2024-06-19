@@ -30,8 +30,3 @@ void GameLogic();
 void initBall();
 void backToRocket();
 void GoToNextLevel();
-
-tObj ObjCreate(float x, float y, float alfa, float speed, char type);
-void ObjWork(tObj* obj);
-void ObjPut(tObj obj);
-void ObjArr_Add(tObj obj);
