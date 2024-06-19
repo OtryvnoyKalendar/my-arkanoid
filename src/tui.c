@@ -64,6 +64,6 @@ void ShowGameInfo() {
 	snprintf(buf, bufSize, "RECORD %4d", hitCntMax);
 	PutText(buf, 7, xstart, COLOR_YELLOW);
 	
-	snprintf(buf, bufSize, "rocket.x = %3d", rocket.x);
+	snprintf(buf, bufSize, "racket.x = %3d", rocket.x);
 	PutText(buf, 9, xstart, COLOR_YELLOW);
 }
