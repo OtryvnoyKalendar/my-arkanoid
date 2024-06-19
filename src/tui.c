@@ -28,6 +28,8 @@ void ShowMap() {
 					color = COLOR_WIDE; break;
 				case SYMBOL_THIN:
 					color = COLOR_THIN; break;
+				case SYMBOL_BULLET:
+					color = COLOR_BULLET; break;
 			}
 			
 			PutSymbolToConsole(i, j, symbol, color);

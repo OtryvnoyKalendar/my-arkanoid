@@ -9,6 +9,10 @@
 #include "core.h"
 #include "object.h"
 
+//#define objBulletSpeed 		0.0008f
+#define objBulletSpeed 		0.8f
+#define objBallSpeed 		0.8f
+
 int hitCnt = 0;
 int hitCntNeed = 10;
 int hitCntMax = 0;
@@ -59,7 +63,7 @@ void moveBall(float x, float y) {
 void initBall() {
 	moveBall(2, 2);
 	ball.alfa = -M_PI/2;
-	ball.speed = 0.0007;
+	ball.speed = objBallSpeed;
 }
 
 void putBall() {
@@ -67,8 +71,26 @@ void putBall() {
 		map[ball.iy][ball.ix] = SYMBOL_BALL;
 }
 
+void racketShoot() {
+	if(rocket.fireMode != 1)
+		return;
+	
+	ObjArr_Add(ObjCreate(rocket.x + rocket.size/2, rocket.y - 2, 
+						-M_PI_2, objBulletSpeed, SYMBOL_BULLET
+						));
+	rocket.fireMode += 10;
+}
+
+void CountFireMode() {
+	if(rocket.fireMode > 1)
+		rocket.fireMode--;
+}
+
 int ObjHitBrick(tObj ball) {
 	if (map[ball.iy][ball.ix] == SYMBOL_BRICK) {
+		if(lvlMap[ball.iy][ball.ix] == SYMBOL_BRICK) // шизопроверка?
+			ObjChanceCreateRandUpgradeObject(ball.y, ball.x);
+		
 		int brickNum = (ball.ix-1) / BrickWidth;
 		int dx = 1 + brickNum * BrickWidth;
 		for(int i = 0; i < BrickWidth; i++) {
@@ -146,4 +168,5 @@ void GameLogic() {
 		autoMoveBall();
 	
 	CheckWin();
+	CountFireMode();
 }

@@ -7,6 +7,7 @@
 #define SYMBOL_BRICK	'%'
 #define SYMBOL_WIDE		'W'
 #define SYMBOL_THIN		'T'
+#define SYMBOL_BULLET	'.'
 
 #define COLOR_STANDARD 	COLOR_GREEN
 #define COLOR_WALL 		COLOR_WHITE
@@ -16,6 +17,7 @@
 #define COLOR_BRICK 	COLOR_CYAN
 #define COLOR_WIDE	 	COLOR_GREEN
 #define COLOR_THIN	 	COLOR_RED
+#define COLOR_BULLET 	COLOR_WHITE
 
 extern int level;
 extern int run;

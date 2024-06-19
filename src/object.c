@@ -1,10 +1,27 @@
-#include <math.h>
+#include <math.h> // для sin(), cos()
+#include <stdlib.h> // для rand()
+
+// gcc-специфично
+#define min(x, y) ({				\
+	typeof(x) _min1 = (x);			\
+	typeof(y) _min2 = (y);			\
+	(void) (&_min1 == &_min2);		\
+	_min1 < _min2 ? _min1 : _min2; })
+
+#define max(x, y) ({				\
+	typeof(x) _max1 = (x);			\
+	typeof(y) _max2 = (y);			\
+	(void) (&_max1 == &_max2);		\
+	_max1 > _max2 ? _max1 : _max2; })
 
 #include "map.h"
 #include "main.h"
 #include "gameplay.h"
 #include "core.h"
 #include "object.h"
+
+#define RacketSizeMax 15
+#define RacketSizeMin 5
 
 tObj objArr[ObjArrSize];
 int ObjArrCnt = 0;
@@ -29,6 +46,26 @@ void ObjPut(tObj obj) {
 				map[obj.iy][obj.ix] = obj.type;
 }
 
+void ObjChanceCreateRandUpgradeObject(float y, float x) {
+	int i = rand() % objUpgradeTypesRandMax;
+	if(i < objUpgradeTypesCnt)
+		ObjArr_Add(ObjCreate(x, y, M_PI_2, objUpgradeSpeed, objUpgradeTypes[i]));
+}
+
+void ObjWorkUpgrade(tObj* obj) {
+	if(map[obj->iy][obj->ix] != SYMBOL_ROCKET)
+		return;
+	
+	if(obj->type == SYMBOL_WIDE)
+		rocket.size = min(rocket.size+1, RacketSizeMax);
+	else if (obj->type == SYMBOL_THIN)
+		rocket.size = max(rocket.size-1, RacketSizeMin);
+	else
+		ErrorCloseProgram("неизвестный тип улучшения");
+	
+	obj->del = 1;
+}
+
 void ObjMove(tObj* obj) {
 	CorrectAngle(&(obj->alfa));
 	
@@ -41,6 +78,7 @@ void ObjMove(tObj* obj) {
 
 void ObjWork(tObj* obj) {
 	ObjMove(obj);
+	ObjWorkUpgrade(obj);
 }
 
 void ObjArr_Add(tObj obj) {

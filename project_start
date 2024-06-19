@@ -1,5 +1,5 @@
 #!/bin/bash
-# версия скрипта: 1.10
+# версия скрипта: 1.10 sudo
 
 clear
 
@@ -51,7 +51,7 @@ if [ "$run_mode" != "compile_only" ]; then
 			gdb ./mycprog
 			return_value="неизвестно"
 		else
-			./mycprog
+			sudo ./mycprog
 			return_value=$?
 		fi
 		

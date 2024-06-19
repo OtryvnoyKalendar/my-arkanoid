@@ -9,6 +9,9 @@
 #include "tui.h"
 #include "map.h"
 #include "graphic.h"
+#include "keys.h"
+
+#define GAME_DELAY_CONSTANT 50
 
 int level = 1;
 int run = 0;
@@ -22,10 +25,12 @@ void OpenConsoleMode() {
 	setConsoleSize(ConsoleWidth, ConsoleHeight);
 	setConsoleTitle("My Arkanoid! v.0.6");
 	OpenNcursesMode();
+	OpenKeysMode();
 }
 
 void CloseConsoleMode() {
 	CloseNcursesMode();
+	CloseKeysMode();
 }
 
 void BeforeCloseProgram() {
@@ -36,28 +41,31 @@ void BeforeCloseProgram() {
 
 void GameControl() {
 	CheckSignals();
+	RefreshKeyboardStatus();
 	
 	int moveRight = 0;
 	int moveLeft = 0;
 	
-	char c = getch();
-	
-	switch(c) {
-		case 'd':
-			moveRight = 1; break;
-		case 'a':
-			moveLeft = 1; break;
-		case 'q':
-			CloseProgram(); break;
-		case 'w':
-			if(!run)
-				run = 1;
-			else
-				backToRocket();
-			break;
-		case 'r':
-			GoToNextLevel();
-			break;
+	if(GetKeyState(KEY_D)) {
+		moveRight = 1;
+	}
+	if(GetKeyState(KEY_A)) {
+		moveLeft = 1;
+	}
+	if(GetKeyState(KEY_SPACE)) {
+		racketShoot();
+	}
+	else if(GetKeyState(KEY_Q)) {
+		CloseProgram();
+	}
+	else if(GetKeyState(KEY_R)) {
+		GoToNextLevel();
+	}
+	else if(GetKeyPressed(KEY_W)) {
+		if(!run)
+			run = 1;
+		else
+			backToRocket();
 	}
 	
 	rocket.plan_x = rocket.x;
@@ -100,6 +108,7 @@ void InitWorld() {
 int main() {
 	OpenConsoleMode();
 	InitWorld();
+	rocket.fireMode = 1;
 	
 	while(1) {
 		ClearMap();
@@ -110,6 +119,8 @@ int main() {
 		ShowMap();
 		ShowGameInfo();
 		
+		GameControl();
+		napms(GAME_DELAY_CONSTANT);
 		GameControl();
 	}
 	

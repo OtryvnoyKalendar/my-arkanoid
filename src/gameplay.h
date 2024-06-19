@@ -3,6 +3,7 @@
 typedef struct {
 	int x, y;
 	int size;
+	int fireMode;
 	
 	int plan_x;
 	int plan_y;
@@ -30,3 +31,4 @@ void GameLogic();
 void initBall();
 void backToRocket();
 void GoToNextLevel();
+void racketShoot();
