@@ -26,7 +26,7 @@
 tObj objArr[ObjArrSize];
 int ObjArrCnt = 0;
 
-char objUpgradeTypes[] = {SYMBOL_WIDE, SYMBOL_THIN};
+char objUpgradeTypes[] = {SYMBOL_WIDE, SYMBOL_THIN, SYMBOL_FIRE};
 int objUpgradeTypesCnt = sizeof(objUpgradeTypes) / sizeof(objUpgradeTypes[0]);
 
 void CorrectAngle(float* a) {
@@ -60,6 +60,8 @@ void ObjWorkUpgrade(tObj* obj) {
 		rocket.size = min(rocket.size+1, RacketSizeMax);
 	else if (obj->type == SYMBOL_THIN)
 		rocket.size = max(rocket.size-1, RacketSizeMin);
+	else if (obj->type == SYMBOL_FIRE)
+		rocket.fireMode = 1;
 	else
 		ErrorCloseProgram("неизвестный тип улучшения");
 	
@@ -76,9 +78,36 @@ void ObjMove(tObj* obj) {
 	obj->iy = (int)obj->y;
 }
 
+int ObjHitBrick(tObj ball) {
+	if (map[ball.iy][ball.ix] == SYMBOL_BRICK) {
+		if(lvlMap[ball.iy][ball.ix] == SYMBOL_BRICK) // шизопроверка?
+			ObjChanceCreateRandUpgradeObject(ball.y, ball.x);
+		
+		int brickNum = (ball.ix-1) / BrickWidth;
+		int dx = 1 + brickNum * BrickWidth;
+		for(int i = 0; i < BrickWidth; i++) {
+			static char* c;
+			c = &lvlMap[ball.iy][i + dx];
+			if(*c == SYMBOL_BRICK)
+				*c = SYMBOL_NOTHING;
+		}
+		return 1;
+	}
+	return 0;
+}
+
+void ObjWorkBullet(tObj* obj) {
+	if(obj->type != SYMBOL_BULLET)
+		return;
+	
+	if(ObjHitBrick(*obj) || map[obj->iy][obj->ix] == SYMBOL_WALL)
+		obj->del = 1;
+}
+
 void ObjWork(tObj* obj) {
 	ObjMove(obj);
 	ObjWorkUpgrade(obj);
+	ObjWorkBullet(obj);
 }
 
 void ObjArr_Add(tObj obj) {

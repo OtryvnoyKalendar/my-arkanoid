@@ -44,11 +44,11 @@ if [ "$run_mode" != "compile_only" ]; then
 			pid=$(pgrep mycprog);
 			echo "PID: $pid";
 			gdb -silent ./mycprog -pid $pid;' #zsh'
-			./mycprog
+			sudo ./mycprog
 			return_value=$?
 			echo 1 | sudo tee /proc/sys/kernel/yama/ptrace_scope # запрет на присоединение к процессам
 		elif [ "$debug_mode" = "-g3" ]; then
-			gdb ./mycprog
+			sudo gdb ./mycprog
 			return_value="неизвестно"
 		else
 			sudo ./mycprog

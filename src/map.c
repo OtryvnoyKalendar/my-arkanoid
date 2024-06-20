@@ -14,6 +14,7 @@ int IsConsoleCellExists(int mapY, int mapX) {
 	return (mapY >= 0 && mapY < ConsoleHeight && mapX >= 0 && mapX < ConsoleWidth);
 }
 
+/*
 void putBarrierLine(int line, int xStart, int xEnd) {
 	if (xStart<xEnd)
 		for(int i=xStart; i<xEnd;i++)
@@ -25,6 +26,7 @@ void putBarrierVert(int line, int yStart, int yEnd) {
 		for(int i=yStart; i<yEnd;i++)
 			lvlMap[i][line] = SYMBOL_WALL;
 }
+*/
 
 void lvlMapPuzzle() {
 	switch(level) {

@@ -1,9 +1,10 @@
+#include <unistd.h> // для sleep()
+
 #include "core.h"
 #include "map.h"
 #include "main.h"
 #include "graphic.h"
 #include "gameplay.h"
-#include <unistd.h> // для sleep()
 
 #define bufSize 60
 
@@ -30,6 +31,10 @@ void ShowMap() {
 					color = COLOR_THIN; break;
 				case SYMBOL_BULLET:
 					color = COLOR_BULLET; break;
+				case SYMBOL_FIRE:
+					color = COLOR_FIRE; break;
+				case SYMBOL_GUN:
+					color = COLOR_GUN; break;
 			}
 			
 			PutSymbolToConsole(i, j, symbol, color);
@@ -70,6 +75,8 @@ void ShowGameInfo() {
 	snprintf(buf, bufSize, "RECORD %4d", hitCntMax);
 	PutText(buf, 7, xstart, COLOR_YELLOW);
 	
+	/* инфа для отладки
 	snprintf(buf, bufSize, "racket.x = %3d", rocket.x);
 	PutText(buf, 9, xstart, COLOR_YELLOW);
+	*/
 }

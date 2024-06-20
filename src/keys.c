@@ -39,6 +39,7 @@ int GetKeyState(int Key) {
 	return (is_bit_set(key_state, Key));
 }
 
+// возможно надо переписать
 int GetKeyPressed(int Key) {
 	static int pressed = 0;
 	static int KeyPrev = -1;

@@ -1,7 +1,8 @@
-#include "core.h"
 #include <signal.h> // для signal()
 #include <termios.h>
 #include <sys/ioctl.h>
+
+#include "core.h"
 
 // макрос CORE_MOUSE определяет будет ли обрабатываться события мыши
 

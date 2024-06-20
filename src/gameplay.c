@@ -1,6 +1,4 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
+#include <math.h> // для M_PI
 
 #include "gameplay.h"
 #include "map.h"
@@ -9,7 +7,6 @@
 #include "core.h"
 #include "object.h"
 
-//#define objBulletSpeed 		0.0008f
 #define objBulletSpeed 		0.8f
 #define objBallSpeed 		0.8f
 
@@ -21,6 +18,7 @@ void rocketInit() {
 	rocket.size = 8;
 	rocket.x = (width - rocket.size) / 2;
 	rocket.y = height - 2;
+	rocket.fireMode = 0;
 	
 	rocket.plan_x = rocket.x;
 	rocket.plan_y = rocket.y;
@@ -29,6 +27,8 @@ void rocketInit() {
 void rocketPut() {
 	for(int i=0; i<rocket.size; i++)
 		map[rocket.y][rocket.x+i] = SYMBOL_ROCKET;
+	if(rocket.fireMode > 0)
+		map[rocket.y-1][rocket.x + rocket.size/2] = map[rocket.y-2][rocket.x + rocket.size/2] = SYMBOL_GUN;
 }
 
 void GoToNextLevel() {
@@ -36,6 +36,8 @@ void GoToNextLevel() {
 	run = 0;
 	ShowLevelPreview();
 	lvlMapInit();
+	ObjArr_Clear();
+	rocket.fireMode = 0;
 }
 
 void CheckWin() {	
@@ -78,29 +80,15 @@ void racketShoot() {
 	ObjArr_Add(ObjCreate(rocket.x + rocket.size/2, rocket.y - 2, 
 						-M_PI_2, objBulletSpeed, SYMBOL_BULLET
 						));
-	rocket.fireMode += 10;
+	rocket.fireMode += 3;
 }
 
 void CountFireMode() {
+	if(!run)
+		rocket.fireMode = 0;
+	
 	if(rocket.fireMode > 1)
 		rocket.fireMode--;
-}
-
-int ObjHitBrick(tObj ball) {
-	if (map[ball.iy][ball.ix] == SYMBOL_BRICK) {
-		if(lvlMap[ball.iy][ball.ix] == SYMBOL_BRICK) // шизопроверка?
-			ObjChanceCreateRandUpgradeObject(ball.y, ball.x);
-		
-		int brickNum = (ball.ix-1) / BrickWidth;
-		int dx = 1 + brickNum * BrickWidth;
-		for(int i = 0; i < BrickWidth; i++) {
-			static char* c;
-			c = &lvlMap[ball.iy][i + dx];
-			if(*c == SYMBOL_BRICK)
-				*c = SYMBOL_NOTHING;
-		}
-	}
-	return 0;
 }
 
 void autoMoveBall() {
@@ -158,7 +146,6 @@ void autoMoveBall() {
 
 void GameLogic() {
 	rocketPut();
-	putBall();
 	ObjArr_Work();
 	ObjArr_Put();
 	
@@ -166,6 +153,8 @@ void GameLogic() {
 		moveBall(rocket.x + rocket.size/2, rocket.y-1);
 	else
 		autoMoveBall();
+	
+	putBall();
 	
 	CheckWin();
 	CountFireMode();

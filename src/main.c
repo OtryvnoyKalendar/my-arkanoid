@@ -1,7 +1,4 @@
-#include <stdio.h> //input output в консоль, изменение размера консоли
-#include <stdlib.h> // операции с памятью
-#include <math.h> // математика
-#include <time.h> // время, остановка времени
+#include <time.h> // для time()
 
 #include "main.h"
 #include "core.h"
@@ -23,7 +20,7 @@ tBall ball;
 
 void OpenConsoleMode() {
 	setConsoleSize(ConsoleWidth, ConsoleHeight);
-	setConsoleTitle("My Arkanoid! v.0.6");
+	setConsoleTitle("My Arkanoid! v.1.0");
 	OpenNcursesMode();
 	OpenKeysMode();
 }
@@ -55,7 +52,7 @@ void GameControl() {
 	if(GetKeyState(KEY_SPACE)) {
 		racketShoot();
 	}
-	else if(GetKeyState(KEY_Q)) {
+	else if(GetKeyState(KEY_ESC)) {
 		CloseProgram();
 	}
 	else if(GetKeyState(KEY_R)) {
@@ -64,8 +61,8 @@ void GameControl() {
 	else if(GetKeyPressed(KEY_W)) {
 		if(!run)
 			run = 1;
-		else
-			backToRocket();
+		//else
+			//backToRocket();
 	}
 	
 	rocket.plan_x = rocket.x;
@@ -108,7 +105,6 @@ void InitWorld() {
 int main() {
 	OpenConsoleMode();
 	InitWorld();
-	rocket.fireMode = 1;
 	
 	while(1) {
 		ClearMap();
